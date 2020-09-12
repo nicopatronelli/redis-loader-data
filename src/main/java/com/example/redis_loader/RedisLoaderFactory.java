@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 
 public class RedisLoaderFactory {
     public static RedisLoader getRedisLoader(String[] args) throws IOException, URISyntaxException {
-        String operation = args[0]; // HMSET
+        String operation = args[0]; // example: HMSET
         String csvFilePath = args[1]; // DATASET
         switch(operation) {
             case "HMSET":

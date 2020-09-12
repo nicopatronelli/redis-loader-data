@@ -13,10 +13,12 @@ import java.nio.file.Paths;
 public abstract class RedisLoader {
     protected Reader reader;
     protected CSVReader csvReader;
+    protected CSVFile csvFile;
 
     public RedisLoader(String csvFilePath) throws URISyntaxException, IOException {
         this.reader = Files.newBufferedReader(Paths.get(csvFilePath));
         this.csvReader = new CSVReader(this.reader);
+        this.csvFile = new CSVFile(this.csvReader);
     }
 
     public void execute(Jedis jedis) throws IOException, CsvValidationException {
