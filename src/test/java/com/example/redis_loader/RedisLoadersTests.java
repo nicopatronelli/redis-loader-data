@@ -53,7 +53,7 @@ public class RedisLoadersTests {
     @Test
     void ZADDLoaderTest() throws IOException, URISyntaxException, CsvValidationException {
         persistData("ZADD", "./src/test/java/com/example/redis_loader/data_zadd.csv", "fire_pokemons");
-        
+
         Long charmanderRank = jedis.zrevrank("fire_pokemons", "charmander");
         assertThat(charmanderRank).isEqualTo(2L);
 
