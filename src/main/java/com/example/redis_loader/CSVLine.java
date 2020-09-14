@@ -4,17 +4,17 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class CSVLine {
-    String[] l;
+    String[] line;
 
-    public void setLine(String[] l) {
-        this.l = l;
+    public void setLine(String[] line) {
+        this.line = line;
     }
 
     public String valueAt(int index){
-        return l[index];
+        return line[index];
     }
 
     public int length() {
-        return l.length;
+        return line.length;
     }
 }

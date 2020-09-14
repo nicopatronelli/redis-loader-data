@@ -1,18 +1,20 @@
 package com.example.redis_loader;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 public class RedisLoaderFactory {
-    public static RedisLoader getRedisLoader(String[] args) throws IOException, URISyntaxException {
+    public static RedisLoader getRedisLoader(String[] args) throws IOException {
         String operation = args[0]; // example: HMSET
         String csvFilePath = args[1]; // DATASET
         switch(operation) {
             case "HMSET":
                 return new HMSETLoader(csvFilePath);
+            case "SADD":
+                return new SADDLoader(csvFilePath);
             case "ZADD":
-                String sortedSetKey = args[2];
-                return new ZADDLoader(csvFilePath, sortedSetKey);
+                return new ZADDLoader(csvFilePath);
+            case "PFADD":
+                return new PFADDLoader(csvFilePath);
             default:
                 return null; // TODO
         }

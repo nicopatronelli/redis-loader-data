@@ -15,7 +15,7 @@ public abstract class RedisLoader {
     protected CSVReader csvReader;
     protected CSVFile csvFile;
 
-    public RedisLoader(String csvFilePath) throws URISyntaxException, IOException {
+    public RedisLoader(String csvFilePath) throws IOException {
         this.reader = Files.newBufferedReader(Paths.get(csvFilePath));
         this.csvReader = new CSVReader(this.reader);
         this.csvFile = new CSVFile(this.csvReader);

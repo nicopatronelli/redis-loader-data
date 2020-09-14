@@ -11,25 +11,12 @@ import java.util.function.BiConsumer;
 
 public class HMSETLoader extends RedisLoader {
 
-    public HMSETLoader(String csvFilePath) throws URISyntaxException, IOException {
+    public HMSETLoader(String csvFilePath) throws IOException {
         super(csvFilePath);
     }
 
     @Override
-    public void insert(Jedis jedis) throws IOException, CsvValidationException {
-//        Iterator<String[]> lines = this.csvReader.iterator();
-//        String[] headers = lines.next();
-//        String[] line;
-//        Map<String, String> values = new HashMap<>();
-//
-//        while (lines.hasNext()) {
-//            line = lines.next();
-//            for (int i = 0; i < line.length; i++) {
-//                values.put(headers[i], line[i]);
-//            }
-//            jedis.hmset(line[0], values); // insert
-//            values.clear();
-//        }
+    public void insert(Jedis jedis) {
         Map<String, String> values = new HashMap<>();
 
         BiConsumer<Integer, CSVLine> actionPerLine = (index, line) -> {
@@ -42,6 +29,9 @@ public class HMSETLoader extends RedisLoader {
                 line.valueAt(index)
         );
 
-        this.csvFile.forEachLine(actionPerLine, actionPerValue);
+        this.csvFile
+                .forEachLine(actionPerLine)
+                .andForEachValueDo(actionPerValue)
+                .execute();
     }
 }

@@ -1,13 +1,14 @@
 package com.example.redis_loader;
 
 import com.opencsv.CSVReader;
+import lombok.Getter;
 
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 
 public class CSVFile {
     private final String[] header;
-    private final Iterator<String[]> lines;
+    @Getter private final Iterator<String[]> lines;
 
     public CSVFile(CSVReader csvReader) {
         this.lines = csvReader.iterator();
@@ -18,16 +19,8 @@ public class CSVFile {
         return this.header;
     }
 
-    public void forEachLine(BiConsumer<Integer, CSVLine> actionPerLine, BiConsumer<Integer, CSVLine> actionPerValue) {
-        String[] line;
-        CSVLine csvLine = new CSVLine(new String[]{});
-        while (lines.hasNext()) {
-            line = lines.next();
-            csvLine.setLine(line);
-            for (int i = 1; i < csvLine.length(); i++)
-                actionPerValue.accept(i, csvLine);
-            actionPerLine.accept(0, csvLine);
-        }
+    public Clazz forEachLine(BiConsumer<Integer, CSVLine> actionPerLine) {
+        return new Clazz(this, actionPerLine);
     }
 
     public String headerColumnAt(int index) {
