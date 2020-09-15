@@ -1,12 +1,12 @@
-package com.example.redis_loader;
+package com.example.redis_loader.loaders;
 
+import com.example.redis_loader.csv.CSVFile;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
