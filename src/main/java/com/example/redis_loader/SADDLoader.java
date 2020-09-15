@@ -30,7 +30,7 @@ public class SADDLoader extends RedisLoader {
 
         this.csvFile
                 .forEachLine(actionPerLine)
-                .andForEachValueDo(actionPerValue)
+                .andForEachValue(actionPerValue)
                 .execute();
     }
 }

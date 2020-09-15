@@ -7,6 +7,8 @@ public class RedisLoaderFactory {
         String operation = args[0]; // example: HMSET
         String csvFilePath = args[1]; // DATASET
         switch(operation) {
+            case "LPUSH":
+                return new LPUSHLoader(csvFilePath);
             case "HMSET":
                 return new HMSETLoader(csvFilePath);
             case "SADD":

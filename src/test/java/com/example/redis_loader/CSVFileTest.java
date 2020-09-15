@@ -35,7 +35,7 @@ class CSVFileTest {
                     jedis.hmset(line.valueAt(index), values); // insert
                     values.clear();
                 }
-        ).andForEachValueDo(
+        ).andForEachValue(
                 (index, line) -> values.put(
                     csvFile.headerColumnAt(index),
                     line.valueAt(index)

@@ -6,19 +6,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.*;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Set;
 
 public class RedisLoadersTests {
 
     static Jedis jedis;
-    String operation;
-    String csvFilePath;
     String[] args;
     RedisLoader redisLoader;
+
 
     @BeforeAll
     static void setUp(){
@@ -34,10 +35,31 @@ public class RedisLoadersTests {
         jedis.close();
     }
 
-    void persistData(String operation, String csvFilePath) throws IOException, URISyntaxException, CsvValidationException {
+    void persistData(String operation, String csvFilePath) throws IOException, CsvValidationException {
         args = new String[]{operation, csvFilePath};
         redisLoader = RedisLoaderFactory.getRedisLoader(args);
         redisLoader.execute(jedis);
+    }
+
+    @Test
+    void LPUSHLoaderTest() throws IOException, URISyntaxException, CsvValidationException {
+        persistData("LPUSH", "./src/test/java/com/example/redis_loader/data_lpush.csv");
+
+        List<String> electricPokemons = jedis.lrange("electric_pokemons", 0L, -1L);
+        // containsExactly checks for elements and ORDER -> This is what we want!
+        assertThat(electricPokemons).containsExactly(
+                "electrode",
+                "mareep",
+                "jolteon",
+                "raichu",
+                "electabuzz"
+        );
+
+        String shouldBeElectrode = jedis.lpop("electric_pokemons");
+        assertThat(shouldBeElectrode).isEqualTo("electrode");
+
+        String shoulBeElectabuzz = jedis.rpop("electric_pokemons");
+        assertThat(shoulBeElectabuzz).isEqualTo("electabuzz");
     }
 
     @Test

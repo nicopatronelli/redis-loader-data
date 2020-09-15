@@ -2,13 +2,13 @@ package com.example.redis_loader;
 
 import java.util.function.BiConsumer;
 
-public class Clazz {
+public class ActionsPerCSVFileBuilder {
 
     private BiConsumer<Integer, CSVLine> actionPerValue;
     private Action action;
     private boolean executeActionPerValue;
 
-    public Clazz(CSVFile csvFile, BiConsumer<Integer, CSVLine> actionPerLine) {
+    public ActionsPerCSVFileBuilder(CSVFile csvFile, BiConsumer<Integer, CSVLine> actionPerLine) {
         this.executeActionPerValue = false;
         this.action = () -> {
             String[] line;
@@ -22,7 +22,7 @@ public class Clazz {
         };
     }
 
-    public Clazz andForEachValueDo(BiConsumer<Integer, CSVLine> actionPerValue) {
+    public ActionsPerCSVFileBuilder andForEachValue(BiConsumer<Integer, CSVLine> actionPerValue) {
         this.actionPerValue = actionPerValue;
         this.executeActionPerValue = true;
         return this;

@@ -19,8 +19,8 @@ public class CSVFile {
         return this.header;
     }
 
-    public Clazz forEachLine(BiConsumer<Integer, CSVLine> actionPerLine) {
-        return new Clazz(this, actionPerLine);
+    public ActionsPerCSVFileBuilder forEachLine(BiConsumer<Integer, CSVLine> actionPerLine) {
+        return new ActionsPerCSVFileBuilder(this, actionPerLine);
     }
 
     public String headerColumnAt(int index) {

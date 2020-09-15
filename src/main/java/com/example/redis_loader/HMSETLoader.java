@@ -1,10 +1,8 @@
 package com.example.redis_loader;
 
-import com.opencsv.exceptions.CsvValidationException;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -31,7 +29,7 @@ public class HMSETLoader extends RedisLoader {
 
         this.csvFile
                 .forEachLine(actionPerLine)
-                .andForEachValueDo(actionPerValue)
+                .andForEachValue(actionPerValue)
                 .execute();
     }
 }
