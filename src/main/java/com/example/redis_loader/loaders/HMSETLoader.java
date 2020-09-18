@@ -1,11 +1,13 @@
-package com.example.redis_loader;
+package com.example.redis_loader.loaders;
 
+import com.example.redis_loader.RedisLoader;
+import com.example.redis_loader.csv.ActionPerCell;
+import com.example.redis_loader.csv.ActionPerLine;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 public class HMSETLoader extends RedisLoader {
 
@@ -17,19 +19,19 @@ public class HMSETLoader extends RedisLoader {
     public void insert(Jedis jedis) {
         Map<String, String> values = new HashMap<>();
 
-        BiConsumer<Integer, CSVLine> actionPerLine = (index, line) -> {
-            jedis.hmset(line.valueAt(index), values); // insert
+        ActionPerLine actionPerLine = line -> {
+            jedis.hmset(line.valueAtFirstColumn(), values); // insert
             values.clear();
         };
 
-        BiConsumer<Integer, CSVLine> actionPerValue = (index, line) -> values.put(
-                csvFile.headerColumnAt(index),
-                line.valueAt(index)
+        ActionPerCell actionPerCell = (index, line) -> values.put(
+            csvFile.headerColumnAt(index),
+            line.valueAt(index)
         );
 
         this.csvFile
                 .forEachLine(actionPerLine)
-                .andForEachValue(actionPerValue)
+                .andForEachValue(actionPerCell)
                 .execute();
     }
 }

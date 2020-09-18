@@ -1,5 +1,7 @@
 package com.example.redis_loader;
 
+import com.example.redis_loader.loaders.*;
+
 import java.io.IOException;
 
 public class RedisLoaderFactory {
@@ -7,6 +9,8 @@ public class RedisLoaderFactory {
         String operation = args[0]; // example: HMSET
         String csvFilePath = args[1]; // DATASET
         switch(operation) {
+            case "SET":
+                return new SETLoader(csvFilePath);
             case "LPUSH":
                 return new LPUSHLoader(csvFilePath);
             case "HMSET":

@@ -1,14 +1,13 @@
-package com.example.redis_loader;
+package com.example.redis_loader.loaders;
 
+import com.example.redis_loader.RedisLoader;
+import com.example.redis_loader.csv.ActionPerLine;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
 public class LPUSHLoader extends RedisLoader {
-    String key;
+    private String key;
 
     public LPUSHLoader(String csvFilePath) throws IOException {
         super(csvFilePath);
@@ -17,9 +16,8 @@ public class LPUSHLoader extends RedisLoader {
 
     @Override
     public void insert(Jedis jedis) {
-
-        BiConsumer<Integer, CSVLine> actionPerLine = (index, line) -> {
-            jedis.lpush(this.key, line.valueAt(0)); // insert
+        ActionPerLine actionPerLine = line -> {
+            jedis.lpush(this.key, line.valueAtFirstColumn()); // insert
         };
 
         this.csvFile

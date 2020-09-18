@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 import redis.clients.jedis.Jedis;
@@ -19,7 +20,6 @@ public class RedisLoadersTests {
     static Jedis jedis;
     String[] args;
     RedisLoader redisLoader;
-
 
     @BeforeAll
     static void setUp(){
@@ -41,10 +41,37 @@ public class RedisLoadersTests {
         redisLoader.execute(jedis);
     }
 
+    @Test @Disabled
+    void mockTest() throws IOException, CsvValidationException {
+        // Mocking
+        Jedis jedisMock = mock(Jedis.class);
+        when(jedisMock.lpush(anyString(), anyString())).thenReturn(5L);
+        when(jedisMock.lpop("electric_pokemons")).thenReturn("electrode");
+
+        // persistData
+        args = new String[]{"LPUSH", "./src/test/java/com/example/redis_loader/data/data_lpush.csv"};
+        redisLoader = RedisLoaderFactory.getRedisLoader(args);
+        redisLoader.execute(jedisMock);
+
+        // testing
+        String shouldBeElectrode = jedisMock.lpop("electric_pokemons");
+        assertThat(shouldBeElectrode).isEqualTo("electrode");
+    }
+
+    @Test
+    void SetStringTest() throws IOException, CsvValidationException {
+        persistData("SET", "./src/test/java/com/example/redis_loader/data/data_set_string.csv");
+
+        String shoulBePikachu = jedis.get("pokemons:25");
+        assertThat(shoulBePikachu).isEqualTo("pikachu");
+
+        String shoulBeCharizard = jedis.get("pokemons:6");
+        assertThat(shoulBeCharizard).isEqualTo("charizard");
+    }
+
     @Test
     void LPUSHLoaderTest() throws IOException, URISyntaxException, CsvValidationException {
-        persistData("LPUSH", "./src/test/java/com/example/redis_loader/data_lpush.csv");
-
+        persistData("LPUSH", "./src/test/java/com/example/redis_loader/data/data_lpush.csv");
         List<String> electricPokemons = jedis.lrange("electric_pokemons", 0L, -1L);
         // containsExactly checks for elements and ORDER -> This is what we want!
         assertThat(electricPokemons).containsExactly(
@@ -64,7 +91,7 @@ public class RedisLoadersTests {
 
     @Test
     void HMSETLoaderTest() throws IOException, URISyntaxException, CsvValidationException {
-        persistData("HMSET", "./src/test/java/com/example/redis_loader/data_hmset.csv");
+        persistData("HMSET", "./src/test/java/com/example/redis_loader/data/data_hmset.csv");
 
         String pikachuName = jedis.hmget("pokemon:25", "name").get(0);
         assertThat(pikachuName).isEqualTo("pikachu");
@@ -75,7 +102,7 @@ public class RedisLoadersTests {
 
     @Test
     void SADDLoaderTest() throws IOException, URISyntaxException, CsvValidationException {
-        persistData("SADD", "./src/test/java/com/example/redis_loader/data_sadd.csv");
+        persistData("SADD", "./src/test/java/com/example/redis_loader/data/data_sadd.csv");
 
         Set<String> pokemonsFire = jedis.smembers("pokemons:fire");
         assertThat(pokemonsFire).containsOnly("charmander", "charmeleon", "charizard");
@@ -94,7 +121,7 @@ public class RedisLoadersTests {
 
     @Test
     void ZADDLoaderTest() throws IOException, URISyntaxException, CsvValidationException {
-        persistData("ZADD", "./src/test/java/com/example/redis_loader/data_zadd.csv");
+        persistData("ZADD", "./src/test/java/com/example/redis_loader/data/data_zadd.csv");
 
         Long charmanderRank = jedis.zrevrank("fire_pokemons", "charmander");
         assertThat(charmanderRank).isEqualTo(2L);
@@ -105,11 +132,9 @@ public class RedisLoadersTests {
 
     @Test
     void PFADDLoaderTest() throws IOException, URISyntaxException, CsvValidationException {
-        persistData("PFADD", "./src/test/java/com/example/redis_loader/data_pfadd.csv");
+        persistData("PFADD", "./src/test/java/com/example/redis_loader/data/data_pfadd.csv");
 
         Long differentElements = jedis.pfcount("pokemons");
         assertThat(differentElements).isEqualTo(5);
     }
-
-
 }

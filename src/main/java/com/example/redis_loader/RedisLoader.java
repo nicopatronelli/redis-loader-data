@@ -1,4 +1,4 @@
-package com.example.redis_loader.loaders;
+package com.example.redis_loader;
 
 import com.example.redis_loader.csv.CSVFile;
 import com.opencsv.CSVReader;
@@ -26,7 +26,7 @@ public abstract class RedisLoader {
         this.closeReaders();
     }
 
-    abstract void insert(Jedis jedis) throws IOException, CsvValidationException;
+    public abstract void insert(Jedis jedis) throws IOException, CsvValidationException;
 
     protected void closeReaders() throws IOException {
         reader.close();

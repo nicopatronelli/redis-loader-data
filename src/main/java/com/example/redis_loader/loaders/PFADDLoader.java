@@ -1,9 +1,10 @@
-package com.example.redis_loader;
+package com.example.redis_loader.loaders;
 
+import com.example.redis_loader.RedisLoader;
+import com.example.redis_loader.csv.ActionPerLine;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
 
 public class PFADDLoader extends RedisLoader {
 
@@ -13,8 +14,8 @@ public class PFADDLoader extends RedisLoader {
 
     @Override
     public void insert(Jedis jedis) {
-        BiConsumer<Integer, CSVLine> actionPerLine = (index, line) -> {
-            jedis.pfadd(this.csvFile.headerColumnAt(0), line.valueAt(0)); // insert
+        ActionPerLine actionPerLine = line -> {
+            jedis.pfadd(this.csvFile.headerValueAtFirstColumn(), line.valueAtFirstColumn()); // insert
         };
 
         this.csvFile

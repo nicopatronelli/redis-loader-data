@@ -1,11 +1,13 @@
-package com.example.redis_loader;
+package com.example.redis_loader.loaders;
 
+import com.example.redis_loader.RedisLoader;
+import com.example.redis_loader.csv.ActionPerCell;
+import com.example.redis_loader.csv.ActionPerLine;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 public class SADDLoader extends RedisLoader {
 
@@ -17,12 +19,12 @@ public class SADDLoader extends RedisLoader {
     public void insert(Jedis jedis) {
         Set<String> values = new HashSet<>();
 
-        BiConsumer<Integer, CSVLine> actionPerValue = (index, line) ->
+        ActionPerCell actionPerValue = (index, line) ->
             values.add(line.valueAt(index));
 
-        BiConsumer<Integer, CSVLine> actionPerLine = (index, line) -> {
+        ActionPerLine actionPerLine = line -> {
             jedis.sadd(
-                    line.valueAt(0),
+                    line.valueAtFirstColumn(),
                     values.stream().toArray(String[]::new)
             );
             values.clear();

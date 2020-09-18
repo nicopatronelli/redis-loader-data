@@ -1,5 +1,6 @@
 package com.example.redis_loader;
 
+import com.example.redis_loader.csv.CSVFile;
 import com.opencsv.CSVReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,34 +25,34 @@ class CSVFileTest {
         reader = Files.newBufferedReader(Paths.get(csvFilePath));
         csvReader = new CSVReader(reader);
     }
+//
+//    @Test
+//    void hmsetTest() {
+//        Map<String, String> values = new HashMap<>();
+//        CSVFile csvFile = new CSVFile(csvReader);
+//        Jedis jedis = new Jedis("localhost");
+//        csvFile.forEachLine(
+//                (index, line) -> {
+//                    jedis.hmset(line.valueAt(index), values); // insert
+//                    values.clear();
+//                }
+//        ).andForEachValue(
+//                (index, line) -> values.put(
+//                    csvFile.headerColumnAt(index),
+//                    line.valueAt(index)
+//                )
+//        ).execute();
+//    }
 
-    @Test
-    void hmsetTest() {
-        Map<String, String> values = new HashMap<>();
-        CSVFile csvFile = new CSVFile(csvReader);
-        Jedis jedis = new Jedis("localhost");
-        csvFile.forEachLine(
-                (index, line) -> {
-                    jedis.hmset(line.valueAt(index), values); // insert
-                    values.clear();
-                }
-        ).andForEachValue(
-                (index, line) -> values.put(
-                    csvFile.headerColumnAt(index),
-                    line.valueAt(index)
-                )
-        ).execute();
-    }
-
-    @Test
-    void zaddTest() {
-        CSVFile csvFile = new CSVFile(csvReader);
-        Jedis jedis = new Jedis("localhost");
-        csvFile.forEachLine(
-                (index, line) -> {
-                    jedis.zadd("fire_pokemons", Double.parseDouble(line.valueAt(0)), line.valueAt(1)); // insert
-                }
-        ).execute();
-    }
+//    @Test
+//    void zaddTest() {
+//        CSVFile csvFile = new CSVFile(csvReader);
+//        Jedis jedis = new Jedis("localhost");
+//        csvFile.forEachLine(
+//                (index, line) -> {
+//                    jedis.zadd("fire_pokemons", Double.parseDouble(line.valueAt(0)), line.valueAt(1)); // insert
+//                }
+//        ).execute();
+//    }
 
 }
