@@ -2,7 +2,7 @@ package com.example.redis_loader.csv;
 
 public class ActionsPerCSVFileBuilder {
 
-    private ActionPerCell actionPerCell;
+    private ActionPerValue actionPerValue;
     private ActionPerCompleteCSVFile actionPerCompleteCSVFile;
     private boolean executeActionPerCell;
 
@@ -20,8 +20,8 @@ public class ActionsPerCSVFileBuilder {
         };
     }
 
-    public ActionsPerCSVFileBuilder andForEachValue(ActionPerCell actionPerCell) {
-        this.actionPerCell = actionPerCell;
+    public ActionsPerCSVFileBuilder andForEachCell(ActionPerValue actionPerValue) {
+        this.actionPerValue = actionPerValue;
         this.executeActionPerCell = true;
         return this;
     }
@@ -33,7 +33,7 @@ public class ActionsPerCSVFileBuilder {
     private void forEachValueIn(CSVLine csvLine) {
         if (executeActionPerCell) {
             for (int column = 1; column < csvLine.length(); column++)
-                this.actionPerCell.executeAt(column, csvLine);
+                this.actionPerValue.executeAt(column, csvLine);
         }
     }
 }

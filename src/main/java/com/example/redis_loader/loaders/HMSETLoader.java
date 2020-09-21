@@ -1,7 +1,7 @@
 package com.example.redis_loader.loaders;
 
 import com.example.redis_loader.RedisLoader;
-import com.example.redis_loader.csv.ActionPerCell;
+import com.example.redis_loader.csv.ActionPerValue;
 import com.example.redis_loader.csv.ActionPerLine;
 import redis.clients.jedis.Jedis;
 
@@ -24,14 +24,14 @@ public class HMSETLoader extends RedisLoader {
             values.clear();
         };
 
-        ActionPerCell actionPerCell = (index, line) -> values.put(
+        ActionPerValue actionPerValue = (index, line) -> values.put(
             csvFile.headerColumnAt(index),
             line.valueAt(index)
         );
 
         this.csvFile
                 .forEachLine(actionPerLine)
-                .andForEachValue(actionPerCell)
+                .andForEachCell(actionPerValue)
                 .execute();
     }
 }

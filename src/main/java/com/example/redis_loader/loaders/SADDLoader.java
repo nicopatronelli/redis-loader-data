@@ -1,7 +1,7 @@
 package com.example.redis_loader.loaders;
 
 import com.example.redis_loader.RedisLoader;
-import com.example.redis_loader.csv.ActionPerCell;
+import com.example.redis_loader.csv.ActionPerValue;
 import com.example.redis_loader.csv.ActionPerLine;
 import redis.clients.jedis.Jedis;
 
@@ -19,7 +19,7 @@ public class SADDLoader extends RedisLoader {
     public void insert(Jedis jedis) {
         Set<String> values = new HashSet<>();
 
-        ActionPerCell actionPerValue = (index, line) ->
+        ActionPerValue actionPerValue = (index, line) ->
             values.add(line.valueAt(index));
 
         ActionPerLine actionPerLine = line -> {
@@ -32,7 +32,7 @@ public class SADDLoader extends RedisLoader {
 
         this.csvFile
                 .forEachLine(actionPerLine)
-                .andForEachValue(actionPerValue)
+                .andForEachCell(actionPerValue)
                 .execute();
     }
 }
